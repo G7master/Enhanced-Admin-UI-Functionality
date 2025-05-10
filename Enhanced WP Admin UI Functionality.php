@@ -38,24 +38,85 @@ if (!function_exists('show_course_category_parent_column')) {
     }
 }
 // ------------------------------
-// Classic Editor: Add Font Select + Size + Background Color
+// Enhance Classic Editor: Font family, size, and background color (system fonts only)
+add_filter('mce_buttons', function($buttons) {
+    array_unshift($buttons, 'fontselect', 'fontsizeselect'); // Font family and size
+    if (!in_array('backcolor', $buttons)) {
+        $buttons[] = 'backcolor'; // Background color
+    }
+    return $buttons;
+});
+
+// Define font sizes and system-safe fonts (no external fonts)
+add_filter('tiny_mce_before_init', function($init) {
+    // Font sizes from 10px to 48px
+    $init['fontsize_formats'] = '10px 11px 12px 13px 14px 16px 18px 20px 24px 28px 32px 36px 42px 48px';
+
+    // System fonts only — cross-platform safe
+    $init['font_formats'] =
+		'Arial=arial,helvetica,sans-serif;' .
+        'Helvetica=helvetica,arial,sans-serif;' .
+        'Georgia=georgia,palatino,serif;' .
+        'Times New Roman=times new roman,times,serif;' .
+        'Trebuchet MS=trebuchet ms,geneva,sans-serif;' .
+        'Verdana=verdana,geneva,sans-serif;' .
+        'Courier New=courier new,courier,monospace;' .
+        'Lucida Console=lucida console,monaco,monospace;' .
+        'Tahoma=tahoma,arial,helvetica,sans-serif;' .
+        'Impact=impact,chicago;' .
+        'Segoe UI=segoe ui,sans-serif;' .
+        'Comic Sans MS=comic sans ms,cursive;' .
+        'Poppins=Poppins,sans-serif;' .
+        'Lato=Lato,sans-serif;' .
+        'Roboto=Roboto,sans-serif;';
+
+    return $init;
+});
+
+// LearnPress Courses: Add "Tags" Column in Admin List
 // ------------------------------
-add_filter('mce_buttons', 'custom_add_font_controls');
-if (!function_exists('custom_add_font_controls')) {
-    function custom_add_font_controls($buttons) {
-        array_unshift($buttons, 'fontselect', 'fontsizeselect');
-        array_push($buttons, 'backcolor');
-        return $buttons;
+add_filter('manage_lp_course_posts_columns', 'custom_add_lp_course_tags_column');
+if (!function_exists('custom_add_lp_course_tags_column')) {
+    function custom_add_lp_course_tags_column($columns) {
+        $columns['course_tag'] = __('Tags', 'enhanced-wp-admin-ui-functionality');
+        return $columns;
     }
 }
 
-add_filter('mce_external_plugins', 'custom_add_font_plugin');
-if (!function_exists('custom_add_font_plugin')) {
-    function custom_add_font_plugin($plugin_array) {
-        $plugin_array['fontselect'] = 'https://cdn.tinymce.com/4/plugins/fontselect/plugin.min.js';
-        return $plugin_array;
+add_action('manage_lp_course_posts_custom_column', 'custom_display_lp_course_tags_column', 10, 2);
+if (!function_exists('custom_display_lp_course_tags_column')) {
+    function custom_display_lp_course_tags_column($column, $post_id) {
+        if ($column === 'course_tag') {
+            $terms = get_the_term_list($post_id, 'course_tag', '', ', ', '');
+            echo is_string($terms) ? $terms : __('—', 'enhanced-wp-admin-ui-functionality');
+        }
     }
 }
+// Add Underline and Unlink buttons to Classic Editor toolbar
+add_filter('mce_buttons', function($buttons) {
+    if (!in_array('underline', $buttons)) {
+        $buttons[] = 'underline';
+    }
+    if (!in_array('unlink', $buttons)) {
+        $buttons[] = 'unlink';
+    }
+    return $buttons;
+});
+
+add_filter('mce_buttons', function() {
+    return [
+        'fontselect',         // ✅ 1. Font family
+        'fontsizeselect',     // ✅ 2. Font size
+        'formatselect',       // ✅ 3. Paragraph/Heading
+        'bold', 'italic', 'underline',
+        'code' , 
+	'alignleft', 'aligncenter', 'alignright',
+        'bullist', 'numlist',
+        'link', 'unlink', 'subscript' , 'superscript' , 'alignjustify' , 'image', 'media' ,
+        'backcolor', 'table' ,
+    ];
+}, 99);
+
 // ------------------------------
 // LearnPress Courses: Add "Tags" Column in Admin List
 // ------------------------------
