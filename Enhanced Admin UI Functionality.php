@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Enhanced WP Admin UI Functionality
+Plugin Name: Enhanced Admin UI Functionality
 Plugin URI: https://github.com/G7master/Enhanced-Admin-UI-Functionality
 Description: Custom Admin UI Functions, Editor Enhancements, and Page/Post Filters. Includes LearnPress and Eduma tweaks for course management.
 Version: 1.0
