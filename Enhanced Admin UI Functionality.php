@@ -1,14 +1,14 @@
 <?php
 /*
 Plugin Name: Enhanced WP Admin UI Functionality
-Plugin URI: https://github.com/G7master/Enhanced-WP-Admin-UI-Functionality
+Plugin URI: https://github.com/G7master/Enhanced-Admin-UI-Functionality
 Description: Custom Admin UI Functions, Editor Enhancements, and Page/Post Filters. Includes LearnPress and Eduma tweaks for course management.
 Version: 1.0
 Author: George Tumanishvili
 Author URI: https://www.linkedin.com/in/georgetumanishvili/
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Text Domain: enhanced-wp-admin-ui-functionality
+Text Domain: enhanced-admin-ui-functionality
 */
 
 // ------------------------------
@@ -78,7 +78,7 @@ add_filter('tiny_mce_before_init', function($init) {
 add_filter('manage_lp_course_posts_columns', 'custom_add_lp_course_tags_column');
 if (!function_exists('custom_add_lp_course_tags_column')) {
     function custom_add_lp_course_tags_column($columns) {
-        $columns['course_tag'] = __('Tags', 'enhanced-wp-admin-ui-functionality');
+        $columns['course_tag'] = __('Tags', 'enhanced-admin-ui-functionality');
         return $columns;
     }
 }
@@ -88,7 +88,7 @@ if (!function_exists('custom_display_lp_course_tags_column')) {
     function custom_display_lp_course_tags_column($column, $post_id) {
         if ($column === 'course_tag') {
             $terms = get_the_term_list($post_id, 'course_tag', '', ', ', '');
-            echo is_string($terms) ? $terms : __('—', 'enhanced-wp-admin-ui-functionality');
+            echo is_string($terms) ? $terms : __('—', 'enhanced-admin-ui-functionality');
         }
     }
 }
@@ -123,7 +123,7 @@ add_filter('mce_buttons', function() {
 add_filter('manage_lp_course_posts_columns', 'custom_add_lp_course_tags_column');
 if (!function_exists('custom_add_lp_course_tags_column')) {
     function custom_add_lp_course_tags_column($columns) {
-        $columns['course_tag'] = __('Tags', 'enhanced-wp-admin-ui-functionality');
+        $columns['course_tag'] = __('Tags', 'enhanced-admin-ui-functionality');
         return $columns;
     }
 }
@@ -133,7 +133,7 @@ if (!function_exists('custom_display_lp_course_tags_column')) {
     function custom_display_lp_course_tags_column($column, $post_id) {
         if ($column === 'course_tag') {
             $terms = get_the_term_list($post_id, 'course_tag', '', ', ', '');
-            echo is_string($terms) ? $terms : __('—', 'enhanced-wp-admin-ui-functionality');
+            echo is_string($terms) ? $terms : __('—', 'enhanced-admin-ui-functionality');
         }
     }
 }
@@ -259,7 +259,7 @@ foreach (['post', 'page', 'lp_course'] as $type) {
         foreach ($columns as $key => $value) {
             $new_columns[$key] = $value;
             if ($key === 'date') {
-                $new_columns['modified_date'] = __('M.Date', 'enhanced-wp-admin-ui-functionality');
+                $new_columns['modified_date'] = __('M.Date', 'enhanced-admin-ui-functionality');
             }
         }
         return $new_columns;
@@ -302,7 +302,7 @@ add_action('restrict_manage_posts', function($post_type, $which) {
         $selected = $_GET["post_tag_{$i}"] ?? '';
         echo '<select name="post_tag_' . esc_attr($i) . '" class="postform">';
 // translators: %d is the index number of the tag filter dropdown field
-$label = esc_html__('All Tags (Field %d)', 'enhanced-wp-admin-ui-functionality');
+$label = esc_html__('All Tags (Field %d)', 'enhanced-admin-ui-functionality');
 
 printf(
     '<option value="">%s</option>',
